@@ -1,0 +1,8 @@
+#calculator, #buttons-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons-row-container {
+    display: flex;
+}
