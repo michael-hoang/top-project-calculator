@@ -10,8 +10,10 @@ body {
 }
 
 button {
+    border-radius: 15px;
     font-size: 2vh;
     height: 10vh;
+    margin: 0.4vh;
     width: 10vh;
 }
 
@@ -20,7 +22,16 @@ button {
 }
 
 #calculator, #buttons-container {
+    align-items: center;
     display: flex;
     flex-direction: column;
+}
+
+#display {
+    border: 2px solid black;
+    border-radius: 15px;
+    height: 15vh;
+    margin-bottom: 0.4vh;
+    width: 42vh;
 }
 
