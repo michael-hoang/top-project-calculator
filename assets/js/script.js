@@ -12,3 +12,4 @@ let a, operator, b;
 function operate(a, operator, b) {
     return operators[operator](a, b);
 }
+
