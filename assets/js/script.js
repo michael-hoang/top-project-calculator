@@ -10,5 +10,5 @@ let a, operator, b;
 
 // Math operation
 function operate(a, operator, b) {
-
+    return operators[operator](a, b);
 }
