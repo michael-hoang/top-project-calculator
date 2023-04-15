@@ -28,10 +28,17 @@ button {
 }
 
 #display {
+    align-items: center;
     border: 2px solid black;
     border-radius: 15px;
+    display: flex;
+    font-size: 7vh;
     height: 15vh;
+    justify-content: end;
     margin-bottom: 0.4vh;
     width: 42vh;
 }
 
+#display-text {
+    padding-right: 2vh;
+}
