@@ -9,6 +9,12 @@ body {
     
 }
 
+button {
+    font-size: 2vh;
+    height: 10vh;
+    width: 10vh;
+}
+
 .buttons-row-container {
     display: flex;
 }
