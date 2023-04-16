@@ -19,12 +19,12 @@ function operate(a, operator, b) {
 // Reference to HTML elements
 const digitBtns = document.querySelectorAll('.digits');
 const operatorBtns = document.querySelectorAll('.operators');
-const display = document.querySelector('#display-text');
+const displayLower = document.querySelector('#display-lower-text');
 const decimalBtn = document.querySelector('#dot')
 
 // Update display function
 function updateDisplay() {
-    display.innerHTML = a + operator + b
+    displayLower.innerHTML = a + operator + b
 }
 
 // Event listeners
