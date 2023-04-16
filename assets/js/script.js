@@ -5,10 +5,11 @@ const operators = {
     '*': (a, b) => {return a * b},
     '/': (a, b) => {return a / b},
 }
-// Container for the operands and the operator
+// Container for the operands, operator, and decimal point.
 let a = '';
 let operator = '';
 let b = '';
+let dot = '';
 
 // Math operation function
 function operate(a, operator, b) {
@@ -19,6 +20,7 @@ function operate(a, operator, b) {
 const digitBtns = document.querySelectorAll('.digits');
 const operatorBtns = document.querySelectorAll('.operators');
 const display = document.querySelector('#display-text');
+const decimalBtn = document.querySelector('#dot')
 
 // Update display function
 function updateDisplay() {
@@ -31,6 +33,9 @@ digitBtns.forEach((btn) => {
         let value = event.target.innerHTML;
         if (operator === '') {
             a += value;
+            if (a === '00') {
+                a = 0;
+            }
         } else {
             b += value;
         }
@@ -41,10 +46,19 @@ digitBtns.forEach((btn) => {
 operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         operator = event.target.innerHTML;
-        console.log(operator)
         if (a === '') {
             a = 0; 
         }
-        display.innerHTML = a + operator;
+        updateDisplay()
     });
+});
+
+decimalBtn.addEventListener('click', (event) => {
+    dot = event.target.innerHTML;
+    if (!a) {
+        a = '0.';
+    } else {
+        a += dot;
+    }
+    updateDisplay()
 });
