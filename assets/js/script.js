@@ -1,9 +1,9 @@
 // Basic math operator functions inside an object
 const operators = {
     '+': (a, b) => {return a + b},
-    '-': (a, b) => {return a - b},
-    '*': (a, b) => {return a * b},
-    '/': (a, b) => {return a / b},
+    '−': (a, b) => {return a - b},
+    '×': (a, b) => {return a * b},
+    '÷': (a, b) => {return a / b},
 }
 // Container for the operands, operator, and decimal point.
 let a = '';
@@ -34,7 +34,7 @@ digitBtns.forEach((btn) => {
         if (operator === '') {
             a += value;
             if (a === '00') {
-                a = 0;
+                a = '0';
             }
         } else {
             b += value;
@@ -46,8 +46,10 @@ digitBtns.forEach((btn) => {
 operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         operator = event.target.innerHTML;
+        console.log(operator);
+        console.log(typeof operator);
         if (a === '') {
-            a = 0; 
+            a = '0'; 
         }
         updateDisplay()
     });
@@ -55,10 +57,21 @@ operatorBtns.forEach((btn) => {
 
 decimalBtn.addEventListener('click', (event) => {
     dot = event.target.innerHTML;
-    if (!a) {
-        a = '0.';
+    if (!operator) {
+        a = processDecimalPoint(a);
     } else {
-        a += dot;
+        b = processDecimalPoint(b);
     }
     updateDisplay()
 });
+
+// Function for processing strings with a decimal point
+function processDecimalPoint(operand) {
+    if (!operand) {
+        operand = '0.'
+    } else if (operand.includes(dot)) {
+    } else {
+        operand += dot;
+    }
+    return operand;
+}
