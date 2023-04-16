@@ -17,10 +17,12 @@ function operate(a, operator, b) {
 }
 
 // Reference to HTML elements
+const displayUpper = document.querySelector('#display-upper-text');
+const displayLower = document.querySelector('#display-lower-text');
+const clearBtn = document.querySelector('#clear')
 const digitBtns = document.querySelectorAll('.digits');
 const operatorBtns = document.querySelectorAll('.operators');
-const displayLower = document.querySelector('#display-lower-text');
-const decimalBtn = document.querySelector('#dot')
+const decimalBtn = document.querySelector('#dot');
 
 // Update display function
 function updateDisplay() {
@@ -28,6 +30,15 @@ function updateDisplay() {
 }
 
 // Event listeners
+clearBtn.addEventListener('click', (event) => {
+    a = '';
+    operator = '';
+    b = '';
+    dot = '';
+    displayUpper.innerHTML = ''
+    displayLower.innerHTML = '0'
+});
+
 digitBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         let value = event.target.innerHTML;
