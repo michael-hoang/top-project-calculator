@@ -20,13 +20,31 @@ const digitBtns = document.querySelectorAll('.digits');
 const operatorBtns = document.querySelectorAll('.operators');
 const display = document.querySelector('#display-text');
 
+// Update display function
+function updateDisplay() {
+    display.innerHTML = a + operator + b
+}
+
 // Event listeners
 digitBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         let value = event.target.innerHTML;
         if (operator === '') {
-            a += (value);
-            display.innerHTML = a;
+            a += value;
+        } else {
+            b += value;
         }
+        updateDisplay()
+    });
+});
+
+operatorBtns.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+        operator = event.target.innerHTML;
+        console.log(operator)
+        if (a === '') {
+            a = 0; 
+        }
+        display.innerHTML = a + operator;
     });
 });
