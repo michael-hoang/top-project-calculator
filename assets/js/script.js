@@ -13,7 +13,7 @@ let dot = '';
 
 // Math operation function
 function operate(a, operator, b) {
-    return operators[operator](a, b);
+    return operators[operator](+a, +b);
 }
 
 // Reference to HTML elements
@@ -53,23 +53,27 @@ digitBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         let value = event.target.innerHTML;
         if (operator === '') {
-            a = processOperand(a, value);
-            updateDisplay()
+            a = processOperand(a, value, 'string');
+        } else if (b === '' || b === '0') {
+            b = processOperand(b, value, 'string');
         } else {
-            b = processOperand(b, value);
-            updateDisplay()
-
+            b += value;
         }
+        updateDisplay()
     });
 });
 
 operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
-        operator = event.target.innerHTML;
         if (a === '') {
-            a = '0'; 
+            a = '0';
+        } else if (operator && b) {
+            a = operate(a, operator, b);
+            b = '';
         }
+        operator = event.target.innerHTML;
         updateDisplay()
+
     });
 });
 
@@ -83,14 +87,18 @@ decimalBtn.addEventListener('click', (event) => {
     updateDisplay()
 });
 
-// Functions for processing number strings
-function processOperand(operand, value) {
-    if (operand === '00') {
-        operand = '0';
-    } else if (operand === '0') {
-        operand = value;
-    } else {
-        operand += value;
+// Functions for processing an operand as a string or number, or with a decimal point.
+function processOperand(operand, value, dataType) {
+    if (dataType === 'string') {
+        if (operand === '00') {
+            operand = '0';
+        } else if (operand === '0') {
+            operand = value;
+        } else {
+            operand += value;
+        }
+    } else if (dataType === 'number') {
+        operand = '' + operate(a, operator, operand);
     }
     return operand;
 }
