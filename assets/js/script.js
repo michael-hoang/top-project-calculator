@@ -26,7 +26,12 @@ const decimalBtn = document.querySelector('#dot');
 
 // Update display function
 function updateDisplay() {
-    displayLower.innerHTML = a + operator + b
+    if (operator) {
+        displayUpper.innerHTML = a + operator;
+        displayLower.innerHTML = a;
+    } else {
+        displayLower.innerHTML = a;
+    }
 }
 
 // Event listeners
@@ -43,12 +48,9 @@ digitBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         let value = event.target.innerHTML;
         if (operator === '') {
-            a += value;
-            if (a === '00') {
-                a = '0';
-            }
+            a = processOperand(a, value);
         } else {
-            b += value;
+            b = processOperand(b, value);
         }
         updateDisplay()
     });
@@ -57,8 +59,6 @@ digitBtns.forEach((btn) => {
 operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         operator = event.target.innerHTML;
-        console.log(operator);
-        console.log(typeof operator);
         if (a === '') {
             a = '0'; 
         }
@@ -76,7 +76,18 @@ decimalBtn.addEventListener('click', (event) => {
     updateDisplay()
 });
 
-// Function for processing strings with a decimal point
+// Functions for processing number strings
+function processOperand(operand, value) {
+    if (operand === '00') {
+        operand = '0';
+    } else if (operand === '0') {
+        operand = value;
+    } else {
+        operand += value;
+    }
+    return operand;
+}
+
 function processDecimalPoint(operand) {
     if (!operand) {
         operand = '0.'
