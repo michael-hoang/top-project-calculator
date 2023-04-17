@@ -27,8 +27,13 @@ const decimalBtn = document.querySelector('#dot');
 // Update display function
 function updateDisplay() {
     if (operator) {
-        displayUpper.innerHTML = a + operator;
-        displayLower.innerHTML = a;
+        if (!b) {
+            displayUpper.innerHTML = a + operator;
+            displayLower.innerHTML = a;
+        } else {
+            displayUpper.innerHTML = a + operator;
+            displayLower.innerHTML = b;
+        }    
     } else {
         displayLower.innerHTML = a;
     }
@@ -49,10 +54,12 @@ digitBtns.forEach((btn) => {
         let value = event.target.innerHTML;
         if (operator === '') {
             a = processOperand(a, value);
+            updateDisplay()
         } else {
             b = processOperand(b, value);
+            updateDisplay()
+
         }
-        updateDisplay()
     });
 });
 
