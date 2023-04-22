@@ -30,6 +30,7 @@ const digitBtns = document.querySelectorAll('.digits');
 const operatorBtns = document.querySelectorAll('.operators');
 const decimalPtBtn = document.querySelector('#dot');
 const equalBtn = document.querySelector('#equal');
+const display = document.querySelector('#display');
 
 // Update display function
 function updateDisplay() {
@@ -73,9 +74,9 @@ digitBtns.forEach((btn) => {
             equalPreviouslyClicked = false;
         }
         if (operator === '') {
-            a = processOperand(a, value, 'string');
+            a = processOperand(a, value);
         } else if (b === '' || b === '0') {
-            b = processOperand(b, value, 'string');
+            b = processOperand(b, value);
         } else {
             b += value;
         }
@@ -147,21 +148,23 @@ equalBtn.addEventListener('click', (event) => {
         a = result;
         result = operate(a, operator, bTemp);
     }
+    if (+result > 9999999999999) {
+        result = result.toExponential();
+    }
+    if (countDecimalPlaces(result) > 6) {
+        result = (+result).toExponential(6)
+    }
     updateDisplay();
 });
 
-// Functions for processing an operand as a string or number, or with a decimal point.
-function processOperand(operand, value, dataType) {
-    if (dataType === 'string') {
-        if (operand === '00') {
-            operand = '0';
-        } else if (operand === '0') {
-            operand = value;
-        } else {
-            operand += value;
-        }
-    } else if (dataType === 'number') {
-        operand = '' + operate(a, operator, operand);
+// Functions for processing an operand or decimal point string in a calculable format
+function processOperand(operand, value) {
+    if (operand === '00') {
+        operand = '0';
+    } else if (operand === '0') {
+        operand = value;
+    } else {
+        operand += value;
     }
     return operand;
 }
@@ -174,4 +177,16 @@ function processDecimalPoint(operand) {
         operand += '.';
     }
     return operand;
+}
+
+// Function for counting the number of decimal places
+function countDecimalPlaces(value) {
+    if (+value % 1 === 0) {
+        return value;
+    } else {
+        let num_arr = value.toString().split('.');
+        let places = num_arr[num_arr.length - 1].length;
+        console.log(places);
+        return places;
+    }
 }
