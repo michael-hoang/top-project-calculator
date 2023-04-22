@@ -1,15 +1,21 @@
 // Basic math operator functions inside an object
 const operators = {
-    '+': (a, b) => {return a + b},
-    '−': (a, b) => {return a - b},
-    '×': (a, b) => {return a * b},
-    '÷': (a, b) => {return a / b},
+    '+': (a, b) => { return a + b },
+    '−': (a, b) => { return a - b },
+    '×': (a, b) => { return a * b },
+    '÷': (a, b) => { return a / b },
 }
-// Container for the operands, operator, and decimal point.
+// Container for the operands and operator
 let a = '';
 let operator = '';
 let b = '';
-let dot = '';
+
+// Container to temporarily store values
+let bTemp = '';
+let result = '';
+
+// Flag to check if equal button was just clicked
+let equalPreviouslyClicked = false;
 
 // Math operation function
 function operate(a, operator, b) {
@@ -27,16 +33,23 @@ const equalBtn = document.querySelector('#equal');
 
 // Update display function
 function updateDisplay() {
-    if (operator) {
-        if (!b) {
-            displayUpper.innerHTML = a + operator;
-            displayLower.innerHTML = a;
+    if (!equalPreviouslyClicked) {
+        if (operator) {
+            displayUpper.innerHTML = `${a} ${operator}`;
+            if (!b) {
+                displayLower.innerHTML = a;
+            } else {
+                displayLower.innerHTML = b;
+            }
         } else {
-            displayUpper.innerHTML = a + operator;
-            displayLower.innerHTML = b;
-        }    
+            displayLower.innerHTML = a;
+        }
+    } else if (!operator) {
+        displayUpper.innerHTML = `${a} =`;
+        displayLower.innerHTML = result;
     } else {
-        displayLower.innerHTML = a;
+        displayUpper.innerHTML = `${a} ${operator} ${bTemp} =`;
+        displayLower.innerHTML = result;
     }
 }
 
@@ -45,7 +58,9 @@ clearBtn.addEventListener('click', (event) => {
     a = '';
     operator = '';
     b = '';
-    dot = '';
+    bTemp = '';
+    result = '';
+    equalPreviouslyClicked = false;
     displayUpper.innerHTML = ''
     displayLower.innerHTML = '0'
 });
@@ -53,6 +68,10 @@ clearBtn.addEventListener('click', (event) => {
 digitBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         let value = event.target.innerHTML;
+        if (equalPreviouslyClicked) {
+            clearBtn.click();
+            equalPreviouslyClicked = false;
+        }
         if (operator === '') {
             a = processOperand(a, value, 'string');
         } else if (b === '' || b === '0') {
@@ -66,12 +85,24 @@ digitBtns.forEach((btn) => {
 
 operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
-        if (a === '') {
-            a = '0';
-        } else if (operator && b) {
-            a = operate(a, operator, b);
-            b = '';
+        if (!equalPreviouslyClicked) {
+            if (!operator) {
+                if (!a) {
+                    a = '0';
+                } else if (a.slice(-1) === '.') {
+                    a = a.slice(0, a.length - 1);
+                }
+            } else {
+                if (b) {
+                    a = operate(a, operator, b);
+                    b = '';
+                }
+            }
+        } else {
+            a = result;
+            equalPreviouslyClicked = false;
         }
+
         operator = event.target.innerHTML;
         updateDisplay()
 
@@ -79,13 +110,44 @@ operatorBtns.forEach((btn) => {
 });
 
 decimalPtBtn.addEventListener('click', (event) => {
-    dot = event.target.innerHTML;
+    if (equalPreviouslyClicked) {
+        clearBtn.click();
+        equalPreviouslyClicked = false;
+    }
     if (!operator) {
         a = processDecimalPoint(a);
     } else {
         b = processDecimalPoint(b);
     }
     updateDisplay()
+});
+
+equalBtn.addEventListener('click', (event) => {
+    if (!equalPreviouslyClicked) {
+        if (!operator) {
+            if (!a) {
+                a = '0';
+            } else if (a.slice(-1) === '.') {
+                a = a.slice(0, a.length - 1);
+            }
+            result = a;
+        } else if (operator && !b) {
+            bTemp = a;
+            result = operate(a, operator, bTemp);
+        } else {
+            if (b.slice(-1) === '.') {
+                b = b.slice(0, b.length - 1);
+            }
+            bTemp = b;
+            result = operate(a, operator, bTemp);
+            b = '';
+        }
+        equalPreviouslyClicked = true;
+    } else {
+        a = result;
+        result = operate(a, operator, bTemp);
+    }
+    updateDisplay();
 });
 
 // Functions for processing an operand as a string or number, or with a decimal point.
@@ -107,9 +169,9 @@ function processOperand(operand, value, dataType) {
 function processDecimalPoint(operand) {
     if (!operand) {
         operand = '0.'
-    } else if (operand.includes(dot)) {
+    } else if (operand.includes('.')) {
     } else {
-        operand += dot;
+        operand += '.';
     }
     return operand;
 }
