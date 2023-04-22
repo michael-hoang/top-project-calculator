@@ -22,7 +22,8 @@ const displayLower = document.querySelector('#display-lower-text');
 const clearBtn = document.querySelector('#clear')
 const digitBtns = document.querySelectorAll('.digits');
 const operatorBtns = document.querySelectorAll('.operators');
-const decimalBtn = document.querySelector('#dot');
+const decimalPtBtn = document.querySelector('#dot');
+const equalBtn = document.querySelector('#equal');
 
 // Update display function
 function updateDisplay() {
@@ -77,7 +78,7 @@ operatorBtns.forEach((btn) => {
     });
 });
 
-decimalBtn.addEventListener('click', (event) => {
+decimalPtBtn.addEventListener('click', (event) => {
     dot = event.target.innerHTML;
     if (!operator) {
         a = processDecimalPoint(a);
