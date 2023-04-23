@@ -14,8 +14,9 @@ let b = '';
 let bTemp = '';
 let result = '';
 
-// Flag to check if equal button was just clicked
+// Flag to check if equal or CE button was just clicked
 let equalPreviouslyClicked = false;
+let clearEntryPreviouslyClicked = false;
 
 // Math operation function
 function operate(a, operator, b) {
@@ -31,6 +32,7 @@ const operatorBtns = document.querySelectorAll('.operators');
 const decimalPtBtn = document.querySelector('#dot');
 const equalBtn = document.querySelector('#equal');
 const display = document.querySelector('#display');
+const clearEntryBtn = document.querySelector('#clear-entry');
 
 // Update display function
 function updateDisplay() {
@@ -66,6 +68,17 @@ clearBtn.addEventListener('click', (event) => {
     displayLower.innerHTML = '0'
 });
 
+clearEntryBtn.addEventListener('click', (event) => {
+    if (!operator) {
+        a = '';
+    } else {
+        b = '';
+    }
+    displayUpper.innerHTML = '';
+    displayLower.innerHTML = '0';
+    clearEntryPreviouslyClicked = true;
+});
+
 digitBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         let value = event.target.innerHTML;
@@ -73,6 +86,7 @@ digitBtns.forEach((btn) => {
             clearBtn.click();
             equalPreviouslyClicked = false;
         }
+
         if (operator === '') {
             a = processOperand(a, value);
         } else if (b === '' || b === '0') {
@@ -86,10 +100,14 @@ digitBtns.forEach((btn) => {
 
 operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
+        // check if this is a brand new calculation and not a continuation from previous
         if (!equalPreviouslyClicked) {
+            // if operator is pressed, operand = a; else operand = b
             if (!operator) {
+                // set 'a' to 0 if no value
                 if (!a) {
                     a = '0';
+                // remove any trailing decimal point
                 } else if (a.slice(-1) === '.') {
                     a = a.slice(0, a.length - 1);
                 }
@@ -99,9 +117,10 @@ operatorBtns.forEach((btn) => {
                     b = '';
                 }
             }
+        // continuation of previous calculation/operation
         } else {
             a = result;
-            equalPreviouslyClicked = false;
+            equalPreviouslyClicked = false; // reset flag for next operation
         }
 
         operator = event.target.innerHTML;
@@ -124,18 +143,26 @@ decimalPtBtn.addEventListener('click', (event) => {
 });
 
 equalBtn.addEventListener('click', (event) => {
+    // brand new calculation
     if (!equalPreviouslyClicked) {
+        // if no operator, operand is 'a'
         if (!operator) {
             if (!a) {
+            // set 'a' to 0 if no value
                 a = '0';
+            // remove trailing decimal point
             } else if (a.slice(-1) === '.') {
                 a = a.slice(0, a.length - 1);
             }
             result = a;
+        // if operand 'a' and operator exists, but 'b' has no value
         } else if (operator && !b) {
+        // operand 'b' (using bTemp) assumes value of 'a'
             bTemp = a;
             result = operate(a, operator, bTemp);
+        // else if both operands 'a' and 'b', and operator exist
         } else {
+        // remove trailing decimal point
             if (b.slice(-1) === '.') {
                 b = b.slice(0, b.length - 1);
             }
@@ -145,15 +172,24 @@ equalBtn.addEventListener('click', (event) => {
         }
         equalPreviouslyClicked = true;
     } else {
-        a = result;
+        if (!clearEntryPreviouslyClicked) {
+            a = result;
+        } else {
+            a = displayLower.innerHTML;
+            clearEntryPreviouslyClicked = true;
+        }
+
         result = operate(a, operator, bTemp);
     }
-    if (+result > 9999999999999) {
-        result = result.toExponential();
+
+    if (+result > 99999999999999) {
+        result = (+result).toExponential();
+        result = limitDecimals(result);
     }
-    if (countDecimalPlaces(result) > 6) {
-        result = (+result).toExponential(6)
-    }
+
+    // if (countDecimalPlaces(result) > 6) {
+    //     result = (+result).toExponential(6)
+    // }
     updateDisplay();
 });
 
@@ -179,14 +215,25 @@ function processDecimalPoint(operand) {
     return operand;
 }
 
-// Function for counting the number of decimal places
+// Helper functions for formatting numbers
 function countDecimalPlaces(value) {
     if (+value % 1 === 0) {
-        return value;
+        return 0;
     } else {
         let num_arr = value.toString().split('.');
         let places = num_arr[num_arr.length - 1].length;
         console.log(places);
         return places;
     }
+}
+
+function limitDecimals(value) {
+    numberString = value.toString();
+    if (numberString.includes('e')) {
+        decimals = numberString.split('e')[0].split('.')[1].length;
+        if (decimals > 5) {
+            value = (+value).toPrecision(5);
+        }
+    }
+    return value;
 }
