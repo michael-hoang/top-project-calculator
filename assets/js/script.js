@@ -33,6 +33,7 @@ const decimalPtBtn = document.querySelector('#dot');
 const equalBtn = document.querySelector('#equal');
 const display = document.querySelector('#display');
 const clearEntryBtn = document.querySelector('#clear-entry');
+const delBtn = document.querySelector('#delete')
 
 // Update display function
 function updateDisplay() {
@@ -64,6 +65,7 @@ clearBtn.addEventListener('click', (event) => {
     bTemp = '';
     result = '';
     equalPreviouslyClicked = false;
+    clearEntryPreviouslyClicked = false;
     displayUpper.innerHTML = ''
     displayLower.innerHTML = '0'
 });
@@ -71,12 +73,20 @@ clearBtn.addEventListener('click', (event) => {
 clearEntryBtn.addEventListener('click', (event) => {
     if (!operator) {
         a = '';
+        displayUpper.innerHTML = '';
     } else {
         b = '';
     }
-    displayUpper.innerHTML = '';
     displayLower.innerHTML = '0';
     clearEntryPreviouslyClicked = true;
+});
+
+delBtn.addEventListener('click', (event) => {
+    if (!operator) {
+        a = a.slice(0, a.length - 1);
+    }
+
+    updateDisplay()
 });
 
 digitBtns.forEach((btn) => {
@@ -102,7 +112,7 @@ operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         // check if this is a brand new calculation and not a continuation from previous
         if (!equalPreviouslyClicked) {
-            // if operator is pressed, operand = a; else operand = b
+            // if operator doesn't exist, then the operand we're working with is 'a', else operand is 'b'
             if (!operator) {
                 // set 'a' to 0 if no value
                 if (!a) {
@@ -112,12 +122,13 @@ operatorBtns.forEach((btn) => {
                     a = a.slice(0, a.length - 1);
                 }
             } else {
+                // if 'b' exists, compute calculation if user wants to continue to add more operations without clicking 'equal'
                 if (b) {
                     a = operate(a, operator, b);
-                    b = '';
+                    b = ''; // reset 'b' for next operation
                 }
             }
-        // continuation of previous calculation/operation
+        // continuation of calculation from preivious result
         } else {
             a = result;
             equalPreviouslyClicked = false; // reset flag for next operation
@@ -157,8 +168,14 @@ equalBtn.addEventListener('click', (event) => {
             result = a;
         // if operand 'a' and operator exists, but 'b' has no value
         } else if (operator && !b) {
-        // operand 'b' (using bTemp) assumes value of 'a'
-            bTemp = a;
+        
+            if (!clearEntryPreviouslyClicked) {
+                // operand 'b' (using bTemp) assumes value of 'a'
+                bTemp = a;
+            } else {
+                bTemp = displayLower.innerHTML;
+            }
+            
             result = operate(a, operator, bTemp);
         // else if both operands 'a' and 'b', and operator exist
         } else {
