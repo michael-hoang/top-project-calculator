@@ -34,6 +34,7 @@ const equalBtn = document.querySelector('#equal');
 const display = document.querySelector('#display');
 const clearEntryBtn = document.querySelector('#clear-entry');
 const delBtn = document.querySelector('#delete')
+const signBtn = document.querySelector('#sign')
 
 // Update display function
 function updateDisplay() {
@@ -62,6 +63,8 @@ function updateDisplay() {
 }
 
 // Event listeners
+
+
 clearBtn.addEventListener('click', (event) => {
     a = '';
     operator = '';
