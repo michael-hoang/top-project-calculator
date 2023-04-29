@@ -63,7 +63,19 @@ function updateDisplay() {
 }
 
 // Event listeners
+signBtn.addEventListener('click', (event) => {
+    let temp_operand = Number(displayLower.innerHTML) * -1;
+    if (equalPreviouslyClicked) {
+        clearBtn.click();
+        a = temp_operand;
 
+    } else if (!operator) {
+        a = temp_operand;
+    } else {
+        b = temp_operand;
+    }
+    updateDisplay()
+});
 
 clearBtn.addEventListener('click', (event) => {
     a = '';
@@ -142,6 +154,7 @@ operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         // check if this is a brand new calculation and not a continuation from previous
         if (!equalPreviouslyClicked) {
+            a = displayLower.innerHTML;
             // if operator doesn't exist, then the operand we're working with is 'a', else operand is 'b'
             if (!operator) {
                 // set 'a' to 0 if no value
@@ -188,6 +201,7 @@ equalBtn.addEventListener('click', (event) => {
     if (!equalPreviouslyClicked) {
         // if no operator, operand is 'a'
         if (!operator) {
+            a = displayLower.innerHTML;
             if (!a) {
                 // set 'a' to 0 if no value
                 a = '0';
@@ -210,6 +224,7 @@ equalBtn.addEventListener('click', (event) => {
             result = operate(a, operator, bTemp);
             // else if both operands 'a' and 'b', and operator exist
         } else {
+            b = displayLower.innerHTML;
             // remove trailing decimal point
             if (b.slice(-1) === '.') {
                 b = b.slice(0, b.length - 1);
@@ -226,11 +241,10 @@ equalBtn.addEventListener('click', (event) => {
             a = displayLower.innerHTML;
             clearEntryPreviouslyClicked = false;
         }
-
         result = operate(a, operator, bTemp);
     }
-
-    if (+result > 99999999999999) {
+    result = result.toString();
+    if (result.length > 13) {
         result = (+result).toExponential();
         result = limitDecimals(result);
     }
