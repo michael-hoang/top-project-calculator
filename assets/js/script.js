@@ -39,6 +39,8 @@ const delBtn = document.querySelector('#delete')
 function updateDisplay() {
     if (!equalPreviouslyClicked) {
         if (operator) {
+            // convert operands into a Number data type for formatting purposes (i.e. excess trailing 0's)
+            a = Number(a);
             displayUpper.innerHTML = `${a} ${operator}`;
             if (!b) {
                 displayLower.innerHTML = a;
@@ -49,9 +51,11 @@ function updateDisplay() {
             displayLower.innerHTML = a;
         }
     } else if (!operator) {
-        displayUpper.innerHTML = `${a} =`;
-        displayLower.innerHTML = result;
+        displayUpper.innerHTML = `${Number(a)} =`;
+        displayLower.innerHTML = Number(result);
     } else {
+        a = Number(a);
+        bTemp = Number(bTemp);
         displayUpper.innerHTML = `${a} ${operator} ${bTemp} =`;
         displayLower.innerHTML = result;
     }
@@ -74,8 +78,13 @@ clearEntryBtn.addEventListener('click', (event) => {
     if (!operator) {
         a = '';
         displayUpper.innerHTML = '';
-    } else {
+    } else if (!equalPreviouslyClicked) {
         b = '';
+    } else {
+        displayUpper.innerHTML = ''
+        a = '0';
+        b = bTemp;
+        equalPreviouslyClicked = false;
     }
     displayLower.innerHTML = '0';
     clearEntryPreviouslyClicked = true;
@@ -83,10 +92,28 @@ clearEntryBtn.addEventListener('click', (event) => {
 
 delBtn.addEventListener('click', (event) => {
     if (!operator) {
-        a = a.slice(0, a.length - 1);
+        if (displayLower.innerHTML === '0') {
+            a = '0';
+            updateDisplay()
+        } else {
+            a = a.slice(0, a.length - 1);
+            if (displayLower.innerHTML.length === 1) {
+                a = '0';
+            }
+            updateDisplay()
+        }
+    } else if (!equalPreviouslyClicked) {
+        b = b.slice(0, b.length - 1);
+        if (displayLower.innerHTML.length === 1) {
+            b = '0';
+        }
+        updateDisplay()
+    } else {
+        displayUpper.innerHTML = '';
+        a = displayLower.innerHTML
+        b = bTemp
+        equalPreviouslyClicked = false;
     }
-
-    updateDisplay()
 });
 
 digitBtns.forEach((btn) => {
@@ -117,7 +144,7 @@ operatorBtns.forEach((btn) => {
                 // set 'a' to 0 if no value
                 if (!a) {
                     a = '0';
-                // remove any trailing decimal point
+                    // remove any trailing decimal point
                 } else if (a.slice(-1) === '.') {
                     a = a.slice(0, a.length - 1);
                 }
@@ -128,7 +155,7 @@ operatorBtns.forEach((btn) => {
                     b = ''; // reset 'b' for next operation
                 }
             }
-        // continuation of calculation from preivious result
+            // continuation of calculation from preivious result
         } else {
             a = result;
             equalPreviouslyClicked = false; // reset flag for next operation
@@ -159,27 +186,28 @@ equalBtn.addEventListener('click', (event) => {
         // if no operator, operand is 'a'
         if (!operator) {
             if (!a) {
-            // set 'a' to 0 if no value
+                // set 'a' to 0 if no value
                 a = '0';
-            // remove trailing decimal point
+                // remove trailing decimal point
             } else if (a.slice(-1) === '.') {
                 a = a.slice(0, a.length - 1);
             }
             result = a;
-        // if operand 'a' and operator exists, but 'b' has no value
+            // if operand 'a' and operator exists, but 'b' has no value
         } else if (operator && !b) {
-        
+
             if (!clearEntryPreviouslyClicked) {
                 // operand 'b' (using bTemp) assumes value of 'a'
                 bTemp = a;
             } else {
                 bTemp = displayLower.innerHTML;
+                clearEntryPreviouslyClicked = false;
             }
-            
+
             result = operate(a, operator, bTemp);
-        // else if both operands 'a' and 'b', and operator exist
+            // else if both operands 'a' and 'b', and operator exist
         } else {
-        // remove trailing decimal point
+            // remove trailing decimal point
             if (b.slice(-1) === '.') {
                 b = b.slice(0, b.length - 1);
             }
@@ -193,7 +221,7 @@ equalBtn.addEventListener('click', (event) => {
             a = result;
         } else {
             a = displayLower.innerHTML;
-            clearEntryPreviouslyClicked = true;
+            clearEntryPreviouslyClicked = false;
         }
 
         result = operate(a, operator, bTemp);
