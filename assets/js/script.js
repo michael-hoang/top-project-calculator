@@ -244,14 +244,10 @@ equalBtn.addEventListener('click', (event) => {
         result = operate(a, operator, bTemp);
     }
     result = result.toString();
-    if (result.length > 13) {
+    if (result.length > 12) {
         result = (+result).toExponential();
         result = limitDecimals(result);
     }
-
-    // if (countDecimalPlaces(result) > 6) {
-    //     result = (+result).toExponential(6)
-    // }
     updateDisplay();
 });
 
