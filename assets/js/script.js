@@ -57,6 +57,14 @@ function updateDisplay() {
     } else {
         a = Number(a);
         bTemp = Number(bTemp);
+        result = result.toString();
+        if (result ==='NaN' || result === 'Infinity') {
+            clearBtn.click();
+            result = 'Cannot divide by 0';
+            displayUpper.innerHTML = ``;
+            displayLower.innerHTML = result;
+            return;
+        }
         displayUpper.innerHTML = `${a} ${operator} ${bTemp} =`;
         displayLower.innerHTML = result;
     }
