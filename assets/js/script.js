@@ -162,10 +162,10 @@ operatorBtns.forEach((btn) => {
     btn.addEventListener('click', (event) => {
         // check if this is a brand new calculation and not a continuation from previous
         if (!equalPreviouslyClicked) {
-            a = displayLower.innerHTML;
             // if operator doesn't exist, then the operand we're working with is 'a', else operand is 'b'
             if (!operator) {
                 // set 'a' to 0 if no value
+                a = displayLower.innerHTML;
                 if (!a) {
                     a = '0';
                     // remove any trailing decimal point
@@ -184,7 +184,7 @@ operatorBtns.forEach((btn) => {
             a = result;
             equalPreviouslyClicked = false; // reset flag for next operation
         }
-
+    
         operator = event.target.innerHTML;
         updateDisplay()
 
@@ -288,7 +288,6 @@ function countDecimalPlaces(value) {
     } else {
         let num_arr = value.toString().split('.');
         let places = num_arr[num_arr.length - 1].length;
-        console.log(places);
         return places;
     }
 }
