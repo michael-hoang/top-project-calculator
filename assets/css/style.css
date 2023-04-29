@@ -1,5 +1,6 @@
 html,
 body {
+    background-color: black;
     font-family: 'Poppins', sans-serif;
     height: 100%;
 }
@@ -12,11 +13,7 @@ body {
 }
 
 button {
-    border-radius: 15px;
-    font-size: 2vh;
-    height: 10vh;
-    margin: 0.4vh;
-    width: 10vh;
+    font-size: 2.5vh;
 }
 
 .buttons-row-container {
@@ -32,8 +29,10 @@ button {
 
 #display {
     align-items: end;
+    background: #111;
     border: 2px solid black;
-    border-radius: 15px;
+    border-radius: 2%;
+    color: white;
     display: flex;
     flex-direction: column;
     font-size: 2.5vh;
@@ -46,5 +45,77 @@ button {
 }
 
 #display-lower-text {
-    font-size: 5.5vh;
+    font-size: 6vh;
+}
+
+#display-upper-text {
+    height: 1%;
+}
+
+.outer {
+    margin: 1%;
+    background: #111;
+    position: relative;
+}
+
+.button {
+    border-radius: 10%;
+    height: 9.5vh;
+    width: 10.5vh;
+}
+
+.outer button, .outer span {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.outer button {
+    background-color: #111;
+    color: #f2f2f2;
+    outline: none;
+    border: none;
+    letter-spacing: 1px;
+    cursor: pointer;
+    z-index: 9;
+}
+
+.button button {
+    border-radius: 10%;
+    height: 9vh;
+    position: center;
+    width: 9vh;
+}
+
+.outer span {
+    height: 100%;
+    width: 100%;
+    background: inherit;
+    border-radius: 10%;
+}
+
+.outer .button span {
+    border-radius: 50px;
+}
+
+.outer:hover span:nth-child(1) {
+    filter: blur(7px);
+}
+
+.outer:hover span:nth-child(2) {
+    filter: blur(14px);
+}
+
+.outer:hover {
+    background: linear-gradient(#14ffe9, #ffeb3b, #ff00e0);
+    animation: rotate 1.5s linear infinite;
+}
+@keyframes rotate {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
 }

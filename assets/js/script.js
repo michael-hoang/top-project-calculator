@@ -244,7 +244,7 @@ equalBtn.addEventListener('click', (event) => {
         result = operate(a, operator, bTemp);
     }
     result = result.toString();
-    if (result.length > 12) {
+    if (result.length > 11) {
         result = (+result).toExponential();
         result = limitDecimals(result);
     }
