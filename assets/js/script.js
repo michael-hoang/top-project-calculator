@@ -95,6 +95,7 @@ clearBtn.addEventListener('click', (event) => {
     clearEntryPreviouslyClicked = false;
     displayUpper.innerHTML = ''
     displayLower.innerHTML = '0'
+    event.target.blur() // remove focus from clear btn to prevent 'Enter' key from clearing twice
 });
 
 clearEntryBtn.addEventListener('click', (event) => {
@@ -257,6 +258,34 @@ equalBtn.addEventListener('click', (event) => {
         result = limitDecimals(result);
     }
     updateDisplay();
+});
+
+// Add keyboard event listener
+document.addEventListener('keydown', (event) => {
+    digitBtns.forEach((btn) => {
+        if (event.key === btn.innerHTML) {
+            btn.click();
+        }
+    });
+    operatorBtns.forEach((btn) => {
+        if (
+            event.key === '/' && btn.innerHTML === '÷' ||
+            event.key === '*' && btn.innerHTML === '×' ||
+            event.key === '-' && btn.innerHTML === '−' ||
+            event.key === '+' && btn.innerHTML === '+'
+        ) {
+            btn.click();
+        }
+    });
+    if (event.key === 'Enter') {
+        equalBtn.click();
+    } else if (event.key === '.') {
+        decimalPtBtn.click();
+    } else if (event.key === 'Backspace') {
+        delBtn.click();
+    } else if (event.key === 'Delete') {
+        clearBtn.click();
+    }
 });
 
 // Functions for processing an operand or decimal point string in a calculable format
